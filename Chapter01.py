@@ -39,8 +39,8 @@ def DMux(In, select):
 
 def Nand16(a, b):
     i = 0
-    out = [0] * 16
-    while i < 16:
+    out = [0] * len(a)
+    while i < len(a):
         out[i] = Nand(a[i], b[i])
         i = i + 1
     return out
@@ -48,8 +48,8 @@ def Nand16(a, b):
 
 def Not16(x):
     i = 0
-    out = [0] * 16
-    while i < 16:
+    out = [0] * len(x)
+    while i < len(x):
         out[i] = Not(x[i])
         i = i + 1
     return out
@@ -57,8 +57,8 @@ def Not16(x):
 
 def And16(a, b):
     i = 0
-    out = [0] * 16
-    while i < 16:
+    out = [0] * len(a)
+    while i < len(a):
         out[i] = And(a[i], b[i])
         i = i + 1
     return out
@@ -66,8 +66,8 @@ def And16(a, b):
 
 def Mux16(a, b, select):
     i = 0
-    out = [0] * 16
-    while i < 16:
+    out = [0] * len(a)
+    while i < len(a):
         out[i] = Mux(a[i], b[i], select)
         i = i + 1
     return out
@@ -76,7 +76,49 @@ def Mux16(a, b, select):
 def Or8Way(x):
     i = 0
     out = 0
-    while i < 16:
-        out = Nand(out, x[i])
+    while i < len(x):
+        out = Or(out, x[i])
         i = i + 1
     return out
+
+
+def Mux4Way16(a, b, c, d, select):
+    i = 0
+    out = [0] * len(a)
+    while i < len(a):
+        out[i] = Or(And(Not(select[0]), Or(And(Not(select[1]), a[i]), And(select[1], b[i]))),
+                    And(select[0], Or(And(Not(select[1]), c[i]), And(select[1], d[i]))))
+        i = i + 1
+    return out
+
+
+def Mux8Way16(a, b, c, d, e, f, g, h, select):
+    i = 0
+    out = [0] * len(a)
+    while i < len(a):
+        out[i] = Or(And(Not(select[0]), Or(And(Not(select[1]), Or(And(Not(select[2]), a[i]), And(select[2], b[i]))),
+                                           And(select[1], Or(And(Not(select[2]), c[i]), And(select[2], d[i]))))),
+                    And(select[0], Or(And(Not(select[1]), Or(And(Not(select[2]), e[i]), And(select[2], f[i]))),
+                                      And(select[1], Or(And(Not(select[2]), g[i]), And(select[2], h[i]))))))
+        i = i + 1
+    return out
+
+
+def DMux4Way(In, select):
+    a = And(In, And(Not(select[0]), Not(select[1])))
+    b = And(In, And(select[0], Not(select[1])))
+    c = And(In, And(Not(select[0]), select[1]))
+    d = And(In, And(select[0], select[1]))
+    return a, b, c, d
+
+
+def DMux8Way(In, select):
+    a = And(And(In, Not(select[0])), And(Not(select[1]), Not(select[2])))
+    b = And(And(In, select[0]), And(Not(select[1]), Not(select[2])))
+    c = And(And(In, Not(select[0])), And(select[1], Not(select[2])))
+    d = And(And(In, select[0]), And(select[1], Not(select[2])))
+    e = And(And(In, Not(select[0])), And(Not(select[1]), select[2]))
+    f = And(And(In, select[0]), And(Not(select[1]), select[2]))
+    g = And(And(In, Not(select[0])), And(select[1], select[2]))
+    h = And(And(In, select[0]), And(select[1], select[2]))
+    return a, b, c, d, e, f, g, h
