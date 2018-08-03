@@ -1,16 +1,17 @@
-import Chapter01 as c1
-
+from Chapter01 import And
+from Chapter01 import Xor
+from Chapter01 import Or
 
 def HalfAdder(a, b):
-    Sum = c1.Xor(a, b)
-    carry = c1.And(a, b)
+    Sum = Xor(a, b)
+    carry = And(a, b)
     return Sum, carry
 
 
 def FullAdder(a, b, c):
-    Sum = c1.Or(c1.And(c1.Not(c), c1.Or(c1.And(a, c1.Not(b)), c1.And(c1.Not(a), b))),
-                c1.And(c, c1.Or(c1.And(c1.Not(a), c1.Not(b)), c1.And(a, b))))
-    carry = c1.And(c1.Or(c, b), a)
+    Sum1, carry1 = HalfAdder(a, b)
+    Sum, carry2 = HalfAdder(Sum1, c)
+    carry = Or(carry1, carry2)
     return Sum, carry
 
 
