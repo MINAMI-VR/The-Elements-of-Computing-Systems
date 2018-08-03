@@ -83,24 +83,12 @@ def Or8Way(x):
 
 
 def Mux4Way16(a, b, c, d, select):
-    i = 0
-    out = [0] * len(a)
-    while i < len(a):
-        out[i] = Or(And(Not(select[0]), Or(And(Not(select[1]), a[i]), And(select[1], b[i]))),
-                    And(select[0], Or(And(Not(select[1]), c[i]), And(select[1], d[i]))))
-        i = i + 1
+    out = Mux16(Mux16(a, b, select[0]), Mux16(c, d, select[0]), select[1])
     return out
 
 
 def Mux8Way16(a, b, c, d, e, f, g, h, select):
-    i = 0
-    out = [0] * len(a)
-    while i < len(a):
-        out[i] = Or(And(Not(select[0]), Or(And(Not(select[1]), Or(And(Not(select[2]), a[i]), And(select[2], b[i]))),
-                                           And(select[1], Or(And(Not(select[2]), c[i]), And(select[2], d[i]))))),
-                    And(select[0], Or(And(Not(select[1]), Or(And(Not(select[2]), e[i]), And(select[2], f[i]))),
-                                      And(select[1], Or(And(Not(select[2]), g[i]), And(select[2], h[i]))))))
-        i = i + 1
+    out = Mux16(Mux4Way16(a, b, c, d, select), Mux4Way16(e, f, g, h, select), select[2])
     return out
 
 
@@ -122,3 +110,4 @@ def DMux8Way(In, select):
     g = And(And(In, Not(select[0])), And(select[1], select[2]))
     h = And(And(In, select[0]), And(select[1], select[2]))
     return a, b, c, d, e, f, g, h
+
