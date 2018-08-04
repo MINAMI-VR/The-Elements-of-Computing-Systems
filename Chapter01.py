@@ -64,6 +64,15 @@ def And16(a, b):
     return out
 
 
+def Xor16(a, b):
+    i = 0
+    out = [0] * len(a)
+    while i < len(a):
+        out[i] = Xor(a[i], b[i])
+        i = i + 1
+    return out
+
+
 def Mux16(a, b, select):
     i = 0
     out = [0] * len(a)
@@ -109,5 +118,5 @@ def DMux8Way(In, select):
     f = And(And(In, select[0]), And(Not(select[1]), select[2]))
     g = And(And(In, Not(select[0])), And(select[1], select[2]))
     h = And(And(In, select[0]), And(select[1], select[2]))
-    return a, b, c, d, e, f, g, h
-
+    out = [a, b, c, d, e, f, g, h]
+    return out

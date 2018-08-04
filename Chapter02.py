@@ -1,6 +1,13 @@
 from Chapter01 import And
 from Chapter01 import Xor
 from Chapter01 import Or
+from Chapter01 import Mux16
+from Chapter01 import Xor16
+from Chapter01 import And16
+from Chapter01 import Not16
+from Chapter01 import Not
+from Chapter01 import Or8Way
+
 
 def HalfAdder(a, b):
     Sum = Xor(a, b)
@@ -30,3 +37,15 @@ def Inc16(In):
     inc[0] = 1
     out = Add16(In, inc)
     return out
+
+
+def ALU(x, y, zx, nx, zy, ny, f, no):
+    x = Mux16(x, Xor16(x, x), zx)
+    x = Mux16(x, Not16(x), nx)
+    y = Mux16(y, Xor16(y, y), zy)
+    y = Mux16(y, Not16(y), ny)
+    z = Mux16(And16(x, y), Add16(x, y), f)
+    out = Mux16(z, Not16(z), no)
+    zr = Not(Or8Way(out))
+    ng = out[len(out) - 1]
+    return out, zr, ng
