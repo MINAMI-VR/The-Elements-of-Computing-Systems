@@ -1,5 +1,6 @@
 from Chapter01 import Mux
 from Chapter01 import Mux16
+from Chapter02 import Inc16
 
 
 class DFF:
@@ -64,7 +65,19 @@ class RAM16K:
         return self.q[p]
 
 
-r = RAM16K()
+class PC:
+    q = [0] * 16
+    q0 = [0] * 16
+
+    def pc(self, In, inc, load, reset):
+        q_inc = Inc16(self.q)
+        self.q = Mux16(self.q, q_inc, inc)
+        self.q = Mux16(self.q, In, load)
+        self.q = Mux16(self.q, self.q0, reset)
+        return self.q
+
+
+r = PC()
 while 1:
     a = [1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0]
     b = [1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0]
@@ -75,4 +88,4 @@ while 1:
     g = [1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0]
     h = [1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1]
     arr = [a, b, c, d, e, f, g, h]
-    print(r.ram16k(arr[int(input("in"))], [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], int(input("load"))))
+    print(r.pc(a, int(input("inc")), int(input("load")), int(input("reset"))))
