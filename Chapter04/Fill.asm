@@ -1,0 +1,21 @@
+﻿(LOOP1)
+	@KEYBORD
+	D=M
+	@LOOP1
+	D;JEQ
+	@i1
+	M=8191
+(LOOP2)
+	@i1
+	D=M
+	@LOOP1
+	D;JLT
+	@SCREEN
+	D=M
+	@i1
+	D=D+M
+	@i2
+	A=D
+	M=-1
+	@LOOP2
+	0;JMP
